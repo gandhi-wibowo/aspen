@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="16dp"
+    android:paddingTop="8dp">
+
+    <ImageView
+        android:id="@+id/imageView_catalog"
+        android:layout_width="match_parent"
+        android:layout_height="340dp"
+        android:background="@drawable/shape_corner_all_24"
+        android:scaleType="fitXY"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView_catalog_is_favorite"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/shape_circle_white"
+        android:padding="9dp"
+        android:src="@drawable/ic_heart_pink_filled_24"
+        app:layout_constraintBottom_toBottomOf="@id/imageView_catalog"
+        app:layout_constraintRight_toRightOf="@id/imageView_catalog"
+        app:layout_constraintTop_toBottomOf="@id/imageView_catalog" />
+
+    <TextView
+        android:id="@+id/textView_catalog_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="24dp"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@id/imageView_catalog" />
+
+    <TextView
+        android:id="@+id/textView_catalog_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="4dp"
+        android:paddingTop="6dp"
+        android:textColor="#606060"
+        android:textSize="12sp"
+        app:drawableLeftCompat="@drawable/ic_star_yellow_16"
+        app:layout_constraintTop_toBottomOf="@id/textView_catalog_name" />
+
+    <TextView
+        android:id="@+id/textView_catalog_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:textColor="#3A544F"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/textView_catalog_rate" />
+
+    <TextView
+        android:id="@+id/textView_read_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:drawablePadding="8dp"
+        android:paddingVertical="4dp"
+        android:text="Read More"
+        android:textColor="#196EEE"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:drawableEndCompat="@drawable/ic_arrow_down_blue_24"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_catalog_description" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

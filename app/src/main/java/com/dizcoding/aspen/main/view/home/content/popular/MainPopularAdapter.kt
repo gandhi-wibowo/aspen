@@ -1,0 +1,34 @@
+package com.dizcoding.aspen.main.view.home.content.popular
+
+import com.dizcoding.adapterdelegate.bind
+import com.dizcoding.adapterdelegate.click
+import com.dizcoding.adapterdelegate.itemDelegate
+import com.dizcoding.aspen.R
+import com.dizcoding.aspen.databinding.ActivityMainCategoryPopularItemBinding
+import com.dizcoding.aspen.main.view.home.content.MainContent
+import com.dizcoding.aspen.main.utility.extension.loadImage
+
+fun mainPopularAdapter(itemClick: (MainContent) -> Unit, isLiked: (MainContent) -> Unit) =
+    itemDelegate<MainContent>(R.layout.activity_main_category_popular_item)
+        .click(itemClick)
+        .bind {
+            val binding = ActivityMainCategoryPopularItemBinding.bind(containerView)
+            binding.textViewCatalogName.text = it.catalogName
+            binding.textViewCatalogRate.text = it.catalogRate
+            binding.imageViewCatalog.loadImage(it.catalogImage, R.dimen.rad_24)
+            if (it.isCatalogFavorite) {
+                binding.imageViewCatalogLike.setImageResource(R.drawable.ic_heart_pink_filled_24)
+            } else {
+                binding.imageViewCatalogLike.setImageResource(R.drawable.ic_heart_gray_outline_24)
+            }
+
+            binding.imageViewCatalogLike.setOnClickListener { c ->
+                it.isCatalogFavorite = !it.isCatalogFavorite
+                if (it.isCatalogFavorite) {
+                    binding.imageViewCatalogLike.setImageResource(R.drawable.ic_heart_pink_filled_24)
+                } else {
+                    binding.imageViewCatalogLike.setImageResource(R.drawable.ic_heart_gray_outline_24)
+                }
+                isLiked.invoke(it)
+            }
+        }
