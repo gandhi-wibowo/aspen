@@ -22,9 +22,10 @@ class CatalogRepositoryImpl(
         return catalogDao.updateFavorite(id, isLiked)
     }
 
-    override fun getAll(keyword: String): Flow<List<CatalogEntity>> {
+    override fun getAll(keyword: String, isLiked: Boolean): Flow<List<CatalogEntity>> {
         if (keyword != "") {
-            return catalogDao.getAll("%$keyword%")
+            return if (isLiked) catalogDao.getFavorite("%$keyword%")
+            else catalogDao.getAll("%$keyword%")
         } else {
             return catalogDao.getAll()
         }

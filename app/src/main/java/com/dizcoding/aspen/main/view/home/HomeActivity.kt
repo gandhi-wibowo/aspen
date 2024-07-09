@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dizcoding.adapterdelegate.DelegatesAdapter
+import com.dizcoding.aspen.R
 import com.dizcoding.aspen.databinding.ActivityHomeBinding
 import com.dizcoding.aspen.main.utility.noactionbarpadding.NoActionBarPadding
 import com.dizcoding.aspen.main.utility.noactionbarpadding.NoActionBarPaddingImpl
@@ -75,6 +76,14 @@ class HomeActivity : AppCompatActivity(),
                return true
             }
         })
+        binding.imageViewButtonFilterFavorite.setOnClickListener {
+            if (viewModel.getLatestStatusFilterByFavorite()){
+                binding.imageViewButtonFilterFavorite.setImageResource(R.drawable.ic_heart_gray_outline_24)
+            }else{
+                binding.imageViewButtonFilterFavorite.setImageResource(R.drawable.ic_heart_pink_filled_24)
+            }
+            viewModel.filterByFavorite()
+        }
 
         viewModel.contents.observe(this){
             adapter.submitList(it)

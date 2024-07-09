@@ -35,11 +35,19 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/textViewCompanyName">
 
+        <ImageView
+            android:id="@+id/imageView_button_filter_favorite"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="4dp"
+            android:src="@drawable/ic_heart_gray_outline_24" />
+
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView_catalog"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="7"
             android:background="@drawable/shape_corner_all_24"
             app:iconifiedByDefault="true"
             app:queryBackground="@null"

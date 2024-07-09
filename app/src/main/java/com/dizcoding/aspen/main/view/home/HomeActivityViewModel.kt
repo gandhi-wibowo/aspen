@@ -19,6 +19,7 @@ class HomeActivityViewModel(
 ) : ViewModel(),
     FavoriteCatalogHandler by FavoriteCatalogHandlerImpl() {
 
+    private var _isFilteredByFavorite = MutableLiveData(false)
     private val _searchQuery = MutableLiveData<String>()
     private val _contents = MediatorLiveData<MutableList<Any>>()
 
@@ -28,11 +29,37 @@ class HomeActivityViewModel(
         _searchQuery.value = keyword ?: ""
     }
 
+    fun getLatestStatusFilterByFavorite(): Boolean {
+        return  _isFilteredByFavorite.value ?: false
+    }
+
+    fun filterByFavorite() {
+        _isFilteredByFavorite.value = !(_isFilteredByFavorite.value ?: false)
+    }
+
     init {
         _contents.addSource(_searchQuery) { query ->
-            viewModelScope.launch {
-                catalogRepository.getAll(query).collect {
-                    val allCatalogContents: List<MainContent> = it.map {
+            getContent(query, _isFilteredByFavorite.value ?: false)
+        }
+        _contents.addSource(_isFilteredByFavorite) { isLiked ->
+            getContent(_searchQuery.value ?: "", isLiked)
+        }
+    }
+
+    private fun getContent(keyword: String, isLiked: Boolean) {
+        viewModelScope.launch {
+            catalogRepository.getAll(keyword, isLiked).collect {
+                val allCatalogContents: List<MainContent> = it.map {
+                    MainContent(
+                        catalogId = it.id,
+                        catalogName = it.name,
+                        catalogImage = it.imageUrl,
+                        catalogRate = it.rate.toString(),
+                        isCatalogFavorite = it.isFavorite
+                    )
+                }
+                val catalogContent: List<MainContent> =
+                    it.filter { it.category == "popular" }.map {
                         MainContent(
                             catalogId = it.id,
                             catalogName = it.name,
@@ -41,37 +68,26 @@ class HomeActivityViewModel(
                             isCatalogFavorite = it.isFavorite
                         )
                     }
-                    val catalogContent: List<MainContent> =
-                        it.filter { it.category == "popular" }.map {
-                            MainContent(
-                                catalogId = it.id,
-                                catalogName = it.name,
-                                catalogImage = it.imageUrl,
-                                catalogRate = it.rate.toString(),
-                                isCatalogFavorite = it.isFavorite
-                            )
-                        }
 
 
-                    if (catalogContent.isEmpty() && allCatalogContents.isEmpty()) _contents.value =
-                        mutableListOf()
-                    else if (catalogContent.isNotEmpty() && allCatalogContents.isEmpty()) _contents.value =
-                        mutableListOf(MainRecommendHolder(recommendContents = allCatalogContents))
-                    else if (catalogContent.isEmpty() && !allCatalogContents.isEmpty()) _contents.value =
-                        mutableListOf(
-                            MainPopularHolder(popularContents = catalogContent)
-                        )
-                    else _contents.value = mutableListOf(
-                        MainPopularHolder(popularContents = catalogContent),
-                        MainRecommendHolder(recommendContents = allCatalogContents)
+                if (catalogContent.isEmpty() && allCatalogContents.isEmpty()) _contents.value =
+                    mutableListOf()
+                else if (catalogContent.isNotEmpty() && allCatalogContents.isEmpty()) _contents.value =
+                    mutableListOf(MainRecommendHolder(recommendContents = allCatalogContents))
+                else if (catalogContent.isEmpty() && !allCatalogContents.isEmpty()) _contents.value =
+                    mutableListOf(
+                        MainPopularHolder(popularContents = catalogContent)
                     )
-                }
-
-
+                else _contents.value = mutableListOf(
+                    MainPopularHolder(popularContents = catalogContent),
+                    MainRecommendHolder(recommendContents = allCatalogContents)
+                )
             }
+
 
         }
     }
+
 
     fun updateFavorite(id: Int, isLiked: Boolean) {
         viewModelScope.launch {
@@ -81,7 +97,7 @@ class HomeActivityViewModel(
 
     fun initContent() {
         viewModelScope.launch {
-            catalogRepository.getAll("").collect {
+            catalogRepository.getAll("", false).collect {
                 if (it.isEmpty()) {
                     catalogRepository.deleteAll()
                     catalogRepository.create(

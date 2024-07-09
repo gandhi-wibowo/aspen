@@ -9,7 +9,7 @@ interface CatalogRepository {
     suspend fun getBy(id: Int): CatalogDetailEntity
     suspend fun deleteAll()
     suspend fun updateFavorite(id: Int, isLiked: Boolean)
-    fun getAll(keyword: String): Flow<List<CatalogEntity>>
+    fun getAll(keyword: String,isLiked: Boolean): Flow<List<CatalogEntity>>
     fun getFavorite(keyword: String): Flow<List<CatalogEntity>>
 
 }
